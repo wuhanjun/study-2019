@@ -1,0 +1,8 @@
+# Compiled by webpack
+test/output
+
+# Fake node_modules folder for tests
+test/node_modules
+
+/node_modules
+/dist

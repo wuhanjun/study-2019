@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@dx/tsukuyomi": "^0.7.3",
+    "loader-utils": "^1.2.3",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  },
+  "scripts": {
+    "start": "webpack"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "pack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "./bin/pack.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/generator": "^7.3.4",
+    "@babel/traverse": "^7.3.4",
+    "@babel/types": "^7.3.4",
+    "babylon": "^6.18.0",
+    "ejs": "^2.6.1"
+  },
+  "dependencies": {
+    "tapable": "^1.1.1"
+  }
+}

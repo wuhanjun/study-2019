@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    [1,2,3].some(x => x === 1) // true 找到该元素就不再循环，
+    [1,2,3].filter(x => x === 1).length //[1] 判断数组长度是否大于0
+    [1,2,3].find(x => x === 1) // true
+    [6,2,3].findIndex(x => x === 6) // 0 返回索引
+    [1,2,3].includes(1) //true
+    [6,2,3].indexOf(6) // 0 返回索引
+  </script>
+</body>
+</html>

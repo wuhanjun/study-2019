@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function deepCloneWrap (value) {
+      let mapCache = []
+      function deepClone (value) {
+        if(value instanceof Date) return new Date(value);
+        if(value instanceof RegExp) return new RegExp(value);
+        if (typeof value !== 'object') return value
+
+        if (mapCache.length) {
+          for (let i = 0,len = arr.length; i < len; ++i) {
+            if (mapCache[i][0] === value) {
+              return mapCache[i][1]
+            }
+          }
+        }
+        let cloneVal = new value.constructor()
+        mapCache.push([value, cloneVal])
+        for (let k in value) {
+          cloneVal[k] = deepClone(value[k])
+        }
+        return cloneVal
+      }
+      return deepClone(value)
+    }
+
+    let a = {b:{c:1}}
+    a.x = a
+    let newA = deepCloneWrap(a)
+    console.log(newA)
+
+    function deepClone (value, hash = new WeakMap()) {
+      if(value instanceof Date) return new Date(value);
+      if(value instanceof RegExp) return new RegExp(value);
+      if (typeof value !== 'object') return value
+
+      if (hash.get(value)) return hash.get(value)
+      let cloneVal = new value.constructor()
+      hash.set(value, cloneVal)
+      for (let k in value) {
+        cloneVal[k] = deepClone(value[k], hash)
+      }
+      return cloneVal
+    }
+
+    let b = {b:{c:1}}
+    b.x = b
+    let newB = deepClone(b)
+    console.log(newB)
+  </script>
+</body>
+</html>

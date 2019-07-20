@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <meta http-equiv='X-UA-Compatible' content='ie=edge' />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+        function update () {
+            console.log('更新视图')
+        }
+        let data = {
+            name: '吴晗君',
+            age: 18,
+            friends: [{aa:1}, 2, 3, 4, 5],
+            address:{
+                location:'浦江'
+            }
+        }
+        function observer (data) {
+            if (typeof data !== 'object') return data
+            for (let k in data) {
+                // 在这里调用observer的目的是：
+                // 1. 当data[k]的类型是对象时，需要递归遍历，修改把该对象的各属性值的存取描述符set和get。
+                // 2. 同时需要将对象本身的存取描述符也进行更改(这一步在下面做，和此处调用observer无关)
+                // 3. 其实只需要当值为对象时候，才需要调用，但是observer函数开头有判断，值不是对象就直接返回。所以在这里就不判断了。
+                observer(data[k])
+                // 将值缓存到一个变量上，这样在get方法中直接返回该变量，而不是返回data[k]，如果是后者，会造成循环引用，造成栈溢出。
+                // 在这里更好的方式就是将下面的代码封装成一个函数，将data[k]作为参数传进去，就不用这一步了。
+                let value = data[k]
+                Object.defineProperty(data, k, {
+                    set (newValue) {
+                        update()
+                        observer(newValue)
+                        value = newValue
+                    },
+                    get () {
+                        return value
+                    }
+                })
+            }
+        }
+        observer(data)
+        data.address = {
+            newLocation: '杭州'
+        }
+
+        const arrMethods = [
+            'traverse', 'push',
+            'pop', 'shift',
+            'unshift', 'sort',
+            'join', 'splice',
+            'slice', 'map',
+            'forEach', 'filter',
+            'some', 'every',
+            'reduce', 'reduceRight',
+            'concat', 'indexOf',
+            'lastIndexOf'
+        ]
+        arrMethods.forEach((method) => {
+            let oldMethod = Array.prototype[method]
+            Array.prototype[method] = function (...args) {
+                update()
+                observer(args)
+                oldMethod.call(this, ...args)
+            }
+        })
+        let arr = [1, 2, 3]
+        arr.unshift({
+            first: 666
+        })
+    </script>
+  </body>
+</html>

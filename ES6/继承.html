@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+      function Animal () {
+        this.bigName = 'animal'
+      }
+      Animal.prototype.eat = function () {
+        console.log('eat')
+      }
+      function Bear (name) {
+        Animal.call(this, name)
+        this.name = name
+      }
+      // 1
+      // Bear.prototype = Object.create(Animal.prototype, {
+      //   constructor: {
+      //     value: Bear
+      //   }
+      // })
+      // 2
+      Object.setPrototypeOf(Bear.prototype, Animal.prototype)
+      Bear.prototype.say = function () {
+        console.log('say')
+      }
+      let bear = new Bear('small Bear')
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // function compose(...funcs) {
+    //   if (funcs.length === 0) {
+    //     return arg => arg
+    //   }
+
+    //   if (funcs.length === 1) {
+    //     return funcs[0]
+    //   }
+    //   // return funcs.reduce((a, b) => (...args) => a(b(...args)))
+    //   return funcs.reduce((a, b) => {
+    //     return (...args) => { // 这个args用来获取前一次函数执行的返回值
+    //       return a(b(...args)) // 这个args用来获取第一次传进来的参数
+    //     }
+    //   })
+    // }
+    // // 第一次：a:fn1, b：fn2，也就是fn2执行了，将函数返回值传给fn1
+    // // 第二次：a: (...args) => { return fn1(fn2(...args)) }, b: fn3, 现在我将前面这个函数叫做x
+    // // 第三次：a: (...args) => x(fn3(...args)), b: fn4，现在我将前面这个函数叫做y，也就是返回(...args) => {return y(fn4(...args))}，赋值到composedFn上
+    // // 现在执行composedFn，流程就很清楚了。
+
+    // function fn1(x) {
+    //   console.log('a')
+    //   return x + 1
+    // }
+
+    // function fn2(x) {
+    //   console.log('b')
+    //   return x + 2
+    // }
+
+    // function fn3(x) {
+    //   console.log('c')
+    //   return x + 3
+    // }
+
+    // function fn4(x) {
+    //   console.log('d')
+    //   return x + 4
+    // }
+
+    // let composedFn = compose(fn1,fn2,fn3,fn4)
+    // let result = composedFn(1)
+    // console.log(result)
+
+    // function compose2(...funcs) {
+    //   if (funcs.length === 0) {
+    //     return arg => arg
+    //   }
+
+    //   if (funcs.length === 1) {
+    //     return funcs[0]
+    //   }
+
+    //   // return (...args) => {
+    //   //   const lastFn = funcs.pop()
+    //   //   return funcs.reduceRight((a, b) => { // a就是每次的返回值，b就是从后到前每个函数
+    //   //     return b(a)
+    //   //   }, lastFn(...args))
+    //   // }
+
+    //   return (...args) => funcs.reduceRight((a, b) => b(a), funcs.pop()(...args))
+    // }
+    // let composedFn2 = compose2(fn1,fn2,fn3,fn4)
+    // let result2 = composedFn2(1)
+    // console.log(result2)
+    
+    Array.prototype.reduce = function (fn, prev) {
+      const len = this.length
+      const argLen = arguments.length
+      if (len === 0) {
+        throw new TypeError('Reduce of empty array with no initial value')
+      }
+      if (len === 1 && argLen < 2) {
+        return this[0]
+      }
+
+      for (let i = 0; i < len; ++i) {
+        if (i === 0) {
+          if (argLen > 1) {
+            prev = fn(prev, this[i], i, this)
+          } else {
+            prev = fn(this[i], this[i+1], i+1, this)
+          }
+        } else {
+          prev = fn(prev, this[i+1], i+1, this)
+        }
+
+        if (len === 1) { // 当前数组只有一个元素，并且穿了初始值的情况
+          return prev
+        }
+        if (i === len - 2) {
+          return prev
+        }
+      }
+    };
+    let result = [1].reduce((a, b, i, arr) => {
+      console.log(a,b,i)
+      return a + b
+    },2)
+    console.log(result)
+  </script>
+</body>
+</html>

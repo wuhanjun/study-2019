@@ -1,0 +1,12 @@
+{
+  "name": "share",
+  "version": "1.0.0",
+  "description": "",
+  "main": "case8.js",
+  "scripts": {
+    "test": "promises-aplus-tests promise-self.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

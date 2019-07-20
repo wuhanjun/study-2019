@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+    </div>
+    <script>
+        // ie10以上支持
+        // iframe中有用到
+        let channel = new MessageChannel();
+        let port1 = channel.port1;
+        let port2 = channel.port2;
+        console.log(port1)
+        console.log(port2)
+
+        // vue.nextTick 以前用这个方式实现的，废弃了
+        port1.onmessage = function(e){
+            console.log(e.data)
+        };
+        port2.postMessage('你好');
+        // vue使用nextTick历史：2.5之前用micro task，2.5用macro task，2.5之后用micro task
+        // vue 在2.5使用macro task(也就是MessageChannel)的原因是 micro task拥有过高的优先级，
+        // 导致了一些bug(#4521, #6690, #6566)。setImmediate被作者任务是完美的，但只有ie和node支持
+        // 2.5之后改回来micro task的原因macro task引发了一些无法绕过的bug  #7109, #7153, #7546, #7834, #8109
+    </script>
+</body>
+</html>

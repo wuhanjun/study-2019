@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function fn1(x) {
+      console.log('a')
+      return x + 1
+    }
+
+    function fn2(x) {
+      console.log('b')
+      return x + 2
+    }
+
+    function fn3(x) {
+      console.log('c')
+      return x + 3
+    }
+
+    function fn4(x) {
+      console.log('d')
+      return x + 4
+    }
+
+    function compose(...funcs) {
+     if (funcs.length === 0) {
+       return arg => arg
+     }
+
+     if (funcs.length === 1) {
+       return funcs[0]
+     }
+     return funcs.reduce((a, b) => {
+       return (...args) => {
+         return a(b(...args)) 
+       }
+     })
+   }
+   // ...funcs
+   // 第一步，循环返回的第一个值是函数X，看下一步，所以X的参数就是fn3的返回值，
+   // 也就是说fn2的参数就是fn3的返回值
+   ```
+   (...args) => {
+      return fn1(fn2(...args)) 
+    }
+   ```
+   // 第二步， 循环返回的第二个值是函数Y
+  ```
+  (...args) => {
+    return X(fn3(...args))
+  }
+  ```
+  // 第三步，reduce返回的第三个值是函数Z,这个函数作为reduce的最终返回值赋值给了composedFn
+  ```
+  (...args) => {
+    return Y(fn4(...args))
+  }
+  ```
+  // 第四步，执行composedFn(1),也就是上一步fn4的参数是1.连起来执行就是从后往前一个一个执行
+    let composedFn = compose(fn1,fn2,fn3,fn4)
+    let result = composedFn(1)
+    
+  </script>
+</body>
+</html>

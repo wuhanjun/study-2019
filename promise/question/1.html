@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    setImmediate(function () {
+      console.log(6)
+    })
+
+    new Promise(function (resolve) {
+      console.log(1)
+      for (let i = 0; i < 9999; ++i) {
+        i === 9998 && resolve()
+      }
+      console.log(2)
+    }).then( function () {
+      console.log(5)
+    })
+
+    var a = +new Date();
+    setTimeout(function () {
+      console.log('时间:', +new Date() - a)
+      console.log(4)
+    }, 0)
+
+    console.log(3)
+
+// 1, 2, 3, 5, 6/4
+
+// 如果是node环境下，有两种可能
+
+// 1, 2, 3, 5, 6, 4
+
+// 1, 2, 3, 5, 4, 6
+
+// 1. new Promise的时候，传进去的方法会同步执行，所以先输出1
+// 2. resolve()执行时，将then中的回调函数加入microtask队列，这时候继续执行输出2
+// 3. setTimeout中的回调函数到给定时间了才会被放入Event Loop中的timer quewe中，所以先继续往下走输出3
+// 4. 这时候，栈中的代码执行完毕。
+// 5. 接下来先会清空一遍microtask队列。所以输出5
+// 6. 在node中，setTimeout(() => ,0)，会被转化为setTimeout(() => {},1)。这个时候要看机器性能优劣了。如果机器性能特别好，比如花了0.00001毫秒就进入了Event loop，那么进入Event Loop的timer quewe阶段的时候，发现还没到时间(1ms)，那么Event Loop就会往下走，到check阶段，这时候setImmediate的回调就会先执行。如果机器性能比较差或者环境不稳定，过了1秒钟才进入Event loop，那么进入Event loop的timer quewe阶段，发现settimeout的回调函数已经被放进来了。就会先执行，之后再在check阶段执行setImmediate的回调。
+
+// 如果在浏览器端，基本思路还是Event Loop那一套(不过和node有差异)，那么我默认为是IE10以上，因为setImmediate在MDN中说只有ie10实现了。
+
+// 1. 按照大家一贯的说法就是setImmediate比setTimeout快(他俩都是macro task)，包括vue源码中也是这么写的。
+// 2. 但是我的虚拟机测试得到的结果是setImmediate在ie11和edge都有实现，并且setImmediate比setTimeout要慢。所以我的浏览器执行顺序是1、2、3、5、4、6
+
+
+
+    </script>
+</body>
+</html>
